@@ -27,7 +27,7 @@ cp .env.example .env
 nano .env
 ```
 
-Fill in `.env`. Generate each secret with `openssl rand -base64 48`. If port 8010 is already used
+Fill in `.env`. Generate each secret with `openssl rand -hex 32` (letters and digits only, so the database URL stays valid). If port 8010 is already used
 by your other app, change `CRM_PORT`.
 
 ## 4. Start it
