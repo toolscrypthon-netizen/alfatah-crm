@@ -1,0 +1,12 @@
+<li class="list-group-item d-flex justify-content-between align-items-center gap-2 {% if overdue or f.is_overdue %}list-group-item-danger{% endif %}">
+  <div>
+    <a href="{{ f.lead.get_absolute_url }}">{{ f.lead.title|truncatechars:70 }}</a>
+    <div class="small">{{ f.due_at|date:"D d M, h:i A" }}{% if f.note %} · {{ f.note }}{% endif %}{% if show_owner %} · {{ f.assigned_to }}{% endif %}</div>
+  </div>
+  <div class="d-flex gap-1 flex-shrink-0">
+    {% if f.lead.phone %}<a class="btn btn-sm btn-success" href="tel:{{ f.lead.phone }}">Call</a>{% endif %}
+    <form method="post" action="{% url 'follow_up_complete' f.pk %}">{% csrf_token %}
+      <input type="hidden" name="next" value="{{ request.get_full_path }}">
+      <button class="btn btn-sm btn-outline-secondary">Done</button></form>
+  </div>
+</li>

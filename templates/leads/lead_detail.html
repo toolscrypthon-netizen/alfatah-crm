@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+{% load crm humanize %}
+{% block title %}{{ lead.title|truncatechars:50 }} · Alfatah CRM{% endblock %}
+{% block content %}
+<div class="d-flex flex-wrap justify-content-between align-items-start gap-2 mb-3">
+  <div>
+    <a href="{% url 'lead_list' %}" class="small">&larr; Leads</a>
+    <h1 class="h4 mb-1">{{ lead.title }}</h1>
+    <div>{% include "leads/_badges.html" %} <span class="text-muted small">#{{ lead.pk }} · added {{ lead.created_at|naturaltime }}{% if lead.created_by %} by {{ lead.created_by }}{% endif %}</span></div>
+  </div>
+  <div class="d-flex flex-wrap gap-2">
+    {% if lead.phone %}
+      <a class="btn btn-success" href="tel:{{ lead.phone }}">Call {{ lead.phone }}</a>
+      <a class="btn btn-outline-success" href="{{ lead.whatsapp_url }}" target="_blank" rel="noopener">WhatsApp</a>
+    {% endif %}
+    {% if not lead.assigned_to %}<form method="post" action="{% url 'lead_claim' lead.pk %}">{% csrf_token %}<button class="btn btn-warning">Assign to me</button></form>{% endif %}
+    {% if can_edit %}<a class="btn btn-outline-secondary" href="{% url 'lead_edit' lead.pk %}">Edit</a>{% endif %}
+  </div>
+</div>
+
+{% if duplicates %}
+<div class="alert alert-warning py-2">Same phone number as:
+  {% for d in duplicates %}<a href="{{ d.get_absolute_url }}">#{{ d.pk }} {{ d.title|truncatechars:40 }}</a> ({{ d.get_status_display }}){% if not forloop.last %}, {% endif %}{% endfor %}
+</div>
+{% endif %}
+
+<div class="row g-3">
+  <div class="col-lg-4 order-lg-2">
+    <div class="card mb-3"><div class="card-header"><strong>Details</strong></div>
+      <dl class="row card-body mb-0 small">
+        <dt class="col-5">Wants</dt><dd class="col-7">{{ lead.get_intent_display }}</dd>
+        <dt class="col-5">Property</dt><dd class="col-7">{{ lead.get_property_type_display }}{% if lead.bedrooms %}, {{ lead.bedrooms }} bed{% endif %}</dd>
+        <dt class="col-5">Size</dt><dd class="col-7">{{ lead|size_display|default:"-" }}</dd>
+        <dt class="col-5">{% if lead.intent == 'buying' or lead.intent == 'rent_wanted' %}Budget{% else %}Price{% endif %}</dt>
+          <dd class="col-7">{% if lead.price %}PKR {{ lead.price|pkr }} <span class="text-muted">({{ lead.price|intcomma }})</span>{% else %}-{% endif %}</dd>
+        <dt class="col-5">Location</dt><dd class="col-7">{{ lead.area.name|default:"" }}{% if lead.area and lead.area_text %}<br>{% endif %}<span class="text-muted">{{ lead.area_text }}</span>{% if not lead.area and not lead.area_text %}-{% endif %}, {{ lead.city }}</dd>
+        <dt class="col-5">Contact</dt><dd class="col-7">{{ lead.contact_name|default:"-" }}</dd>
+        <dt class="col-5">Phone</dt><dd class="col-7">{% if lead.phone %}<a href="tel:{{ lead.phone }}">{{ lead.phone }}</a>{% else %}-{% endif %}{% if lead.alt_phone %}<br><a href="tel:{{ lead.alt_phone }}">{{ lead.alt_phone }}</a>{% endif %}</dd>
+        <dt class="col-5">Source</dt><dd class="col-7">{% if lead.source_url %}<a href="{{ lead.source_url }}" target="_blank" rel="noopener">{{ lead.get_source_display }} post</a>{% else %}{{ lead.get_source_display }}{% endif %}{% if lead.posted_at %}<br><span class="text-muted">posted {{ lead.posted_at|date:"d M Y" }}</span>{% endif %}</dd>
+        <dt class="col-5">Last contacted</dt><dd class="col-7">{{ lead.last_contacted_at|naturaltime|default:"Never" }}</dd>
+      </dl>
+      {% if lead.description %}<div class="card-body border-top small" style="white-space: pre-line">{{ lead.description }}</div>{% endif %}
+    </div>
+
+    {% if can_edit %}
+    <div class="card mb-3"><div class="card-header"><strong>Pipeline</strong></div>
+      <form class="card-body" method="post" action="{% url 'lead_pipeline' lead.pk %}">{% csrf_token %}
+        {% include "leads/_form_fields.html" with form=pipeline_form %}
+        <button class="btn btn-sm btn-primary">Update</button>
+      </form>
+    </div>
+    {% endif %}
+
+    <div class="card mb-3"><div class="card-header"><strong>Follow-ups</strong></div>
+      <ul class="list-group list-group-flush">
+        {% for f in follow_ups %}
+          <li class="list-group-item small d-flex justify-content-between align-items-center {% if f.is_overdue %}list-group-item-danger{% endif %}">
+            <span class="{% if f.completed_at %}text-decoration-line-through text-muted{% endif %}">{{ f.due_at|date:"D d M, h:i A" }} · {{ f.assigned_to }}{% if f.note %}<br>{{ f.note }}{% endif %}</span>
+            {% if not f.completed_at %}<form method="post" action="{% url 'follow_up_complete' f.pk %}">{% csrf_token %}<button class="btn btn-sm btn-outline-secondary">Done</button></form>{% endif %}
+          </li>
+        {% empty %}<li class="list-group-item small text-muted">None scheduled.</li>{% endfor %}
+      </ul>
+      {% if can_edit %}
+      <form class="card-body border-top" method="post" action="{% url 'lead_add_follow_up' lead.pk %}">{% csrf_token %}
+        <div class="mb-2">{{ follow_up_form.due_at }}</div>
+        <div class="mb-2">{{ follow_up_form.note.as_widget }}</div>
+        {% if user.can_manage %}<div class="mb-2"><label class="form-label small mb-0">For</label>{{ follow_up_form.assigned_to }}</div>{% endif %}
+        <button class="btn btn-sm btn-outline-primary">Schedule follow-up</button>
+      </form>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="col-lg-8 order-lg-1">
+    {% if can_edit %}
+    <div class="card mb-3"><div class="card-header"><strong>Log a call or add a comment</strong></div>
+      <form class="card-body" method="post" action="{% url 'lead_log_activity' lead.pk %}">{% csrf_token %}
+        <div class="row g-2">
+          <div class="col-6 col-md-3"><label class="form-label small mb-0">What</label>{{ activity_form.kind }}</div>
+          <div class="col-6 col-md-3"><label class="form-label small mb-0">Call outcome</label>{{ activity_form.outcome }}</div>
+          <div class="col-12 col-md-6"><label class="form-label small mb-0">Change status to</label>{{ activity_form.new_status }}</div>
+          <div class="col-12">{{ activity_form.body }}</div>
+          <div class="col-6 col-md-4"><label class="form-label small mb-0">Follow up on (optional)</label>{{ activity_form.follow_up_at }}</div>
+          <div class="col-6 col-md-5"><label class="form-label small mb-0">Follow-up note</label>{{ activity_form.follow_up_note }}</div>
+          <div class="col-12 col-md-3 d-flex align-items-end"><button class="btn btn-primary w-100">Save</button></div>
+        </div>
+      </form>
+    </div>
+    {% endif %}
+
+    <div class="card"><div class="card-header"><strong>Timeline</strong></div>
+      <div class="card-body timeline">
+        {% for a in activities %}
+          <div class="entry kind-{{ a.kind }}">
+            <div class="small"><strong>{{ a.get_kind_display }}</strong>{% if a.outcome %} · {{ a.get_outcome_display }}{% endif %}
+              <span class="text-muted">· {{ a.user|default:"System" }} · <span title="{{ a.created_at }}">{{ a.created_at|naturaltime }}</span></span></div>
+            {% if a.body %}<div style="white-space: pre-line">{{ a.body }}</div>{% endif %}
+          </div>
+        {% empty %}<p class="text-muted mb-0">Nothing yet.</p>{% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,3 @@
+<span class="badge intent-{{ lead.intent }}">{{ lead.get_intent_display }}</span>
+<span class="badge status-{{ lead.status }}">{{ lead.get_status_display }}</span>
+{% if lead.priority == 3 %}<span class="badge text-bg-danger">High</span>{% endif %}

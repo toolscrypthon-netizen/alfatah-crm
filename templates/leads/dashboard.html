@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% load humanize %}
+{% block content %}
+<div class="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-2">
+  <h1 class="h4 mb-0">Assalam-o-Alaikum, {{ user.first_name|default:user.username }}</h1>
+  <a class="btn btn-primary" href="{% url 'lead_create' %}">+ Add lead</a>
+</div>
+
+<div class="row g-3 mb-3">
+  <div class="col-6 col-lg-3"><a class="card text-decoration-none h-100" href="{% url 'lead_list' %}?sort=">
+    <div class="card-body"><div class="text-muted small">New leads today</div><div class="stat">{{ new_today }}</div></div></a></div>
+  <div class="col-6 col-lg-3"><a class="card text-decoration-none h-100" href="{% url 'lead_list' %}?assigned=none">
+    <div class="card-body"><div class="text-muted small">Unassigned (open)</div><div class="stat">{{ unassigned }}</div></div></a></div>
+  <div class="col-6 col-lg-3"><a class="card text-decoration-none h-100" href="{% url 'lead_list' %}?assigned=me">
+    <div class="card-body"><div class="text-muted small">My open leads</div><div class="stat">{{ my_open }}</div></div></a></div>
+  <div class="col-6 col-lg-3"><a class="card text-decoration-none h-100" href="{% url 'lead_list' %}?status=won&stage=all">
+    <div class="card-body"><div class="text-muted small">Deals won (30 days)</div><div class="stat text-success">{{ won_30d }}</div></div></a></div>
+</div>
+
+<div class="row g-3">
+  <div class="col-lg-7">
+    <div class="card mb-3">
+      <div class="card-header d-flex justify-content-between"><strong>My follow-ups</strong><a href="{% url 'follow_up_list' %}">See all</a></div>
+      <ul class="list-group list-group-flush">
+        {% for f in overdue %}{% include "leads/_follow_up_row.html" with overdue=True %}{% endfor %}
+        {% for f in due_today %}{% include "leads/_follow_up_row.html" %}{% endfor %}
+        {% if not overdue and not due_today %}<li class="list-group-item text-muted">Nothing due today.</li>{% endif %}
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-header d-flex justify-content-between"><strong>Latest leads</strong><a href="{% url 'lead_list' %}">All leads</a></div>
+      <ul class="list-group list-group-flush">
+        {% for lead in recent %}
+          <li class="list-group-item">
+            <a href="{{ lead.get_absolute_url }}">{{ lead.title|truncatechars:80 }}</a>
+            <div class="small text-muted">{% include "leads/_badges.html" %} {{ lead.area|default:lead.area_text }} · {{ lead.get_source_display }} · {{ lead.created_at|naturaltime }}</div>
+          </li>
+        {% empty %}<li class="list-group-item text-muted">No leads yet. Add one, or they'll arrive once the OLX collector is running.</li>{% endfor %}
+      </ul>
+    </div>
+  </div>
+  <div class="col-lg-5">
+    {% if team %}
+    <div class="card mb-3">
+      <div class="card-header"><strong>Team</strong></div>
+      <div class="table-responsive"><table class="table table-sm mb-0">
+        <thead><tr><th>Member</th><th class="text-end">Open</th><th class="text-end">Won</th><th class="text-end">Overdue</th></tr></thead>
+        <tbody>{% for member in team %}<tr>
+          <td><a href="{% url 'lead_list' %}?assigned={{ member.pk }}">{{ member }}</a></td>
+          <td class="text-end">{{ member.open_count }}</td><td class="text-end">{{ member.won_count }}</td>
+          <td class="text-end {% if member.overdue_count %}text-danger fw-semibold{% endif %}">{{ member.overdue_count }}</td>
+        </tr>{% endfor %}</tbody>
+      </table></div>
+    </div>
+    {% endif %}
+    <div class="card mb-3">
+      <div class="card-header"><strong>Leads by status</strong></div>
+      <ul class="list-group list-group-flush">{% for row in by_status %}
+        <li class="list-group-item d-flex justify-content-between"><a href="{% url 'lead_list' %}?status={{ row.status }}&stage=all">{{ row.label }}</a><span>{{ row.n|intcomma }}</span></li>
+      {% empty %}<li class="list-group-item text-muted">No data yet.</li>{% endfor %}</ul>
+    </div>
+    <div class="card">
+      <div class="card-header"><strong>Leads by source</strong></div>
+      <ul class="list-group list-group-flush">{% for row in by_source %}
+        <li class="list-group-item d-flex justify-content-between"><a href="{% url 'lead_list' %}?source={{ row.source }}&stage=all">{{ row.label }}</a><span>{{ row.n|intcomma }}</span></li>
+      {% empty %}<li class="list-group-item text-muted">No data yet.</li>{% endfor %}</ul>
+    </div>
+  </div>
+</div>
+{% endblock %}

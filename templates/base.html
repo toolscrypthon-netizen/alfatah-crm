@@ -1,0 +1,55 @@
+{% load static %}<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Alfatah CRM{% endblock %}</title>
+  <link href="{% static 'vendor/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="{% static 'css/app.css' %}" rel="stylesheet">
+</head>
+<body>
+{% if user.is_authenticated %}
+<nav class="navbar navbar-expand-md navbar-dark bg-dark">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="{% url 'dashboard' %}">Alfatah CRM</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav" aria-label="Menu">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="nav">
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item"><a class="nav-link" href="{% url 'dashboard' %}">Dashboard</a></li>
+        <li class="nav-item"><a class="nav-link" href="{% url 'lead_list' %}">Leads</a></li>
+        <li class="nav-item"><a class="nav-link" href="{% url 'lead_list' %}?assigned=me">My leads</a></li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'follow_up_list' %}">Follow-ups
+            {% if nav_overdue %}<span class="badge text-bg-danger">{{ nav_overdue }}</span>{% endif %}</a>
+        </li>
+        <li class="nav-item"><a class="nav-link" href="{% url 'lead_create' %}">+ Add lead</a></li>
+      </ul>
+      <ul class="navbar-nav">
+        {% if user.can_manage %}<li class="nav-item"><a class="nav-link" href="{% url 'admin:index' %}">Settings &amp; team</a></li>{% endif %}
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">{{ user }}</a>
+          <ul class="dropdown-menu dropdown-menu-end">
+            <li><span class="dropdown-item-text small text-muted">{{ user.get_role_display }}</span></li>
+            <li><a class="dropdown-item" href="{% url 'password_change' %}">Change password</a></li>
+            <li><form method="post" action="{% url 'logout' %}">{% csrf_token %}<button class="dropdown-item">Log out</button></form></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+{% endif %}
+<main class="container-fluid py-3">
+  {% for message in messages %}
+    <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags|default:'info' }}{% endif %} alert-dismissible fade show py-2">
+      {{ message }}<button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+  {% endfor %}
+  {% block content %}{% endblock %}
+</main>
+<script src="{% static 'vendor/bootstrap.bundle.min.js' %}"></script>
+{% block scripts %}{% endblock %}
+</body>
+</html>

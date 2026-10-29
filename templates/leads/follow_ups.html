@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Follow-ups · Alfatah CRM{% endblock %}
+{% block content %}
+<div class="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-2">
+  <h1 class="h4 mb-0">Follow-ups</h1>
+  {% if user.can_manage %}
+  <form class="d-flex gap-2" method="get">
+    <select class="form-select form-select-sm" name="who" onchange="this.form.submit()">
+      <option value="me" {% if who == 'me' %}selected{% endif %}>Mine</option>
+      <option value="all" {% if who == 'all' %}selected{% endif %}>Whole team</option>
+      {% for u in users %}<option value="{{ u.pk }}" {% if who == u.pk|stringformat:'s' %}selected{% endif %}>{{ u }}</option>{% endfor %}
+    </select>
+  </form>
+  {% endif %}
+</div>
+{% with show_owner=user.can_manage %}
+<div class="card mb-3"><div class="card-header text-danger"><strong>Overdue ({{ overdue|length }})</strong></div>
+  <ul class="list-group list-group-flush">{% for f in overdue %}{% include "leads/_follow_up_row.html" with overdue=True %}{% empty %}<li class="list-group-item text-muted">None, nice work.</li>{% endfor %}</ul></div>
+<div class="card mb-3"><div class="card-header"><strong>Later today ({{ today|length }})</strong></div>
+  <ul class="list-group list-group-flush">{% for f in today %}{% include "leads/_follow_up_row.html" %}{% empty %}<li class="list-group-item text-muted">Nothing else today.</li>{% endfor %}</ul></div>
+<div class="card"><div class="card-header"><strong>Upcoming</strong></div>
+  <ul class="list-group list-group-flush">{% for f in upcoming %}{% include "leads/_follow_up_row.html" %}{% empty %}<li class="list-group-item text-muted">Nothing scheduled.</li>{% endfor %}</ul></div>
+{% endwith %}
+{% endblock %}

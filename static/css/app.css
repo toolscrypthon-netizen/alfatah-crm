@@ -1,0 +1,19 @@
+body { background: #f5f6f8; }
+.stat { font-size: 1.9rem; font-weight: 600; line-height: 1.1; }
+.table td, .table th { vertical-align: middle; }
+.lead-row-title { max-width: 360px; }
+.timeline .entry { border-left: 3px solid #dee2e6; padding: 0 0 0.9rem 0.9rem; position: relative; }
+.timeline .entry::before { content: ""; position: absolute; left: -7px; top: 4px; width: 11px; height: 11px; border-radius: 50%; background: #adb5bd; }
+.timeline .entry.kind-call::before, .timeline .entry.kind-whatsapp::before, .timeline .entry.kind-meeting::before { background: #198754; }
+.timeline .entry.kind-comment::before { background: #0d6efd; }
+.timeline .entry.kind-status::before { background: #fd7e14; }
+.intent-selling { background: #0d6efd; }
+.intent-buying { background: #198754; }
+.intent-rent_out { background: #6f42c1; }
+.intent-rent_wanted { background: #20c997; }
+.status-new { background: #0dcaf0; color: #000; }
+.status-contacted, .status-follow_up { background: #ffc107; color: #000; }
+.status-interested, .status-negotiating { background: #fd7e14; }
+.status-won { background: #198754; }
+.status-lost, .status-not_interested, .status-invalid { background: #6c757d; }
+.form-control, .form-select { font-size: 0.95rem; }
