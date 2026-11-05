@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
-{% block title %}{% if listing %}Edit {{ listing.ref }}{% else %}Add a listing{% endif %} · Alfatah CRM{% endblock %}
+{% block title %}{% if listing %}Edit {{ listing.ref }}{% else %}Add a listing{% endif %} · Al-Fatah Marketing{% endblock %}
 {% block head %}<link href="{% static 'css/listings.css' %}" rel="stylesheet">{% endblock %}
 {% block content %}
 <div class="wz" id="wz" data-editing="{% if listing %}1{% endif %}" data-max-photos="{{ max_photos }}"
@@ -157,7 +157,7 @@
       <textarea class="form-control mb-3" name="description" id="wzDesc" rows="3" placeholder="A line or two buyers should know">{{ form.description.value|default:'' }}</textarea>
 
       <div class="card mb-3"><div class="card-body">
-        <div class="small text-muted mb-2">🔒 Owner details stay in the CRM. They are never shown on the website.</div>
+        <div class="small text-muted mb-2">🔒 Owner details are only for the team. They are never shown on the website.</div>
         <div class="row g-2">
           <div class="col-6"><input class="form-control" name="owner_name" placeholder="Owner name" value="{{ form.owner_name.value|default:'' }}" aria-label="Owner name"></div>
           <div class="col-6"><input class="form-control" name="owner_phone" type="tel" inputmode="tel" placeholder="Owner phone" value="{{ form.owner_phone.value|default:'' }}" aria-label="Owner phone"></div>
