@@ -375,7 +375,7 @@ def website_feed_js(request):
     """Loaded by the website after its own listings.js. Replaces the sample listings once real ones exist."""
     data = json.dumps(website_items(request), ensure_ascii=False).replace("</", "<\\/")
     body = (
-        "/* Live listings from the Alfatah CRM. */\n"
+        "/* Live listings from Al-Fatah Marketing. */\n"
         f"(function () {{ var live = {data};\n"
         "  if (live.length) window.LISTINGS = live; })();\n"
     )
