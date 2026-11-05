@@ -8,6 +8,11 @@
 # than Nginx owns ports 80/443, so an existing app is never taken over.
 set -euo pipefail
 
+# Everything runs inside main() so bash reads the whole file before running any of
+# it. Otherwise, under `curl | bash`, `docker compose exec` swallows the rest of
+# the script from stdin and the install silently stops halfway.
+main() {
+
 DOMAIN="${CRM_DOMAIN:-office.alfatah-marketing.com}"
 REPO="${CRM_REPO:-https://github.com/toolscrypthon-netizen/alfatah-crm.git}"
 DIR="${CRM_DIR:-/opt/alfatah-crm}"
@@ -154,3 +159,6 @@ else
   echo "  cd $DIR && docker compose exec web python manage.py changepassword admin"
 fi
 echo "Code and settings: $DIR   (update later with: cd $DIR && git pull && docker compose up -d --build)"
+}
+
+main "$@" </dev/null
