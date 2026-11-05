@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Al-Fatah Marketing Website</title>
+  <meta name="description" content="Al-Fatah Marketing is a modern real estate agency for buying and selling homes. Data-driven valuations, verified listings, 3D tours and expert local agents.">
+  <meta name="theme-color" content="#05070d">
+  <meta property="og:title" content="Al-Fatah Marketing | Smarter Real Estate">
+  <meta property="og:description" content="Data-driven valuations, verified listings and expert agents.">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="en_PK">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop stop-color='%2322d3ee'/><stop offset='1' stop-color='%238b5cf6'/></linearGradient></defs><rect width='32' height='32' rx='8' fill='url(%23g)'/><path d='M8 16.5 16 9l8 7.5V24H8z' fill='%2305070d'/></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "RealEstateAgent",
+    "name": "Al-Fatah Marketing",
+    "telephone": "+92-300-8197052",
+    "openingHours": "Mo-Su 09:00-21:00",
+    "email": "info@alfatah-marketing.com",
+    "address": { "@type": "PostalAddress", "streetAddress": "Ghosia Colony, 2 km Kattar Band Road, Thokar Niaz Baig", "addressLocality": "Lahore", "postalCode": "53700", "addressCountry": "PK" },
+    "url": "https://www.alfatah-marketing.com",
+    "sameAs": ["https://share.google/TXK2oh74nVRp27pmk", "https://www.facebook.com/share/1FCS4tEiaN/", "https://www.instagram.com/alfatah_marketing"]
+  }
+  </script>
+</head>
+<body>
+
+<div class="bg-grid" aria-hidden="true"></div>
+<div class="bg-orb orb-1" aria-hidden="true"></div>
+<div class="bg-orb orb-2" aria-hidden="true"></div>
+
+<!-- ================= HEADER ================= -->
+<header class="header" id="header">
+  <div class="container nav">
+    <a href="#home" class="logo">
+      <span class="logo-mark"><svg viewBox="0 0 32 32"><path d="M8 16.5 16 9l8 7.5V24H8z"/></svg></span>
+      Al-Fatah<span class="amp">Marketing</span>
+    </a>
+    <nav class="nav-links" id="navLinks">
+      <a href="#listings">Buy</a>
+      <a href="#sell">Sell</a>
+      <a href="#tools">Tools</a>
+      <a href="#process">Process</a>
+      <a href="contact.html">Contact</a>
+      <a href="contact.html" class="btn btn-primary btn-sm">Contact now</a>
+    </nav>
+    <button class="menu-toggle" id="menuToggle" aria-label="Open menu"><span></span><span></span></button>
+  </div>
+</header>
+
+<!-- ================= HERO ================= -->
+<section class="hero" id="home">
+  <div class="container hero-grid">
+    <div class="hero-copy">
+      <span class="pill"><i class="dot"></i> 37 new listings this week</span>
+      <h1>Real estate,<br><span class="grad">re-engineered.</span></h1>
+      <p class="hero-sub">Buy and sell property with live market data, instant valuations and agents who move fast. Every listing verified and every step transparent.</p>
+
+      <form class="search glass" id="searchForm">
+        <div class="seg" id="modeSeg">
+          <button type="button" class="active" data-mode="buy">Buy</button>
+          <button type="button" data-mode="sell">Sell</button>
+        </div>
+        <div class="search-fields">
+          <label class="sf">
+            <span>Location</span>
+            <input id="sLocation" type="text" placeholder="Area, society or block">
+          </label>
+          <label class="sf">
+            <span>Type</span>
+            <select id="sType">
+              <option value="all">Any</option>
+              <option value="house">House</option>
+              <option value="apartment">Apartment</option>
+              <option value="plot">Plot</option>
+              <option value="commercial">Commercial</option>
+            </select>
+          </label>
+          <label class="sf">
+            <span>Max price</span>
+            <select id="sPrice">
+              <option value="0">No limit</option>
+              <option value="10000000">1 Crore</option>
+              <option value="20000000">2 Crore</option>
+              <option value="40000000">4 Crore</option>
+              <option value="100000000">10 Crore</option>
+            </select>
+          </label>
+          <button class="btn btn-primary search-btn" type="submit" aria-label="Search">
+            <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>
+            <span>Search</span>
+          </button>
+        </div>
+      </form>
+
+      <div class="trust">
+        <div class="avatars"><i>JM</i><i>AR</i><i>SK</i><i>+</i></div>
+        <p><b>4.9/5</b> from 600+ verified clients</p>
+      </div>
+    </div>
+
+    <div class="hero-visual">
+      <div class="hero-card glass tilt" id="heroCard">
+        <div class="hc-img img" style="--img:url('https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1000&q=80')">
+          <span class="tag tag-live">● Live</span>
+          <span class="tag tag-3d">3D Tour</span>
+        </div>
+        <div class="hc-body">
+          <div>
+            <p class="mono muted">LISTING #AF-2048</p>
+            <h3>1 Kanal Modern House</h3>
+            <p class="muted">DHA Phase 6, Lahore</p>
+          </div>
+          <p class="hc-price">PKR 9.5 Crore</p>
+        </div>
+        <div class="hc-specs mono"><span>5 BED</span><span>6 BATH</span><span>1 KANAL</span></div>
+      </div>
+      <div class="float-chip glass chip-a">
+        <p class="mono muted">MARKET TREND</p>
+        <svg viewBox="0 0 120 40" class="spark"><polyline points="0,32 15,28 30,30 45,20 60,22 75,14 90,16 105,8 120,6"/></svg>
+        <b class="up">+6.8% YoY</b>
+      </div>
+      <div class="float-chip glass chip-b">
+        <span class="ring">98%</span>
+        <div><b>Sold at or above</b><p class="muted">asking price</p></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="stats glass reveal">
+      <div><strong data-count="1250">0</strong><span>Properties sold</span></div>
+      <div><strong data-count="21">0</strong><span>Avg. days to sell</span></div>
+      <div><strong data-count="500" data-prefix="PKR " data-suffix=" Cr+">0</strong><span>Worth of property sold</span></div>
+      <div><strong data-count="15">0</strong><span>Years in the market</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= LISTINGS ================= -->
+<section class="section" id="listings">
+  <div class="container">
+    <div class="section-head reveal">
+      <div>
+        <p class="eyebrow">// Properties for sale</p>
+        <h2>Featured listings</h2>
+      </div>
+      <div class="filters" id="filters">
+        <button class="chip active" data-filter="all">All</button>
+        <button class="chip" data-filter="house">Houses</button>
+        <button class="chip" data-filter="apartment">Apartments</button>
+        <button class="chip" data-filter="plot">Plots</button>
+        <button class="chip" data-filter="commercial">Commercial</button>
+      </div>
+    </div>
+    <div class="listing-grid" id="listingGrid"></div>
+    <p class="empty glass" id="emptyMsg" hidden>No matches yet. <a href="contact.html">Tell us what you're looking for</a> and we'll source it off-market.</p>
+  </div>
+</section>
+
+<!-- ================= FEATURES ================= -->
+<section class="section">
+  <div class="container">
+    <div class="section-head center reveal">
+      <p class="eyebrow">// Why Al-Fatah Marketing</p>
+      <h2>Built for how people move <span class="grad">today</span></h2>
+    </div>
+    <div class="bento">
+      <div class="bento-card glass big reveal">
+        <div class="icon"><svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="m7 15 4-4 3 3 5-6"/></svg></div>
+        <h3>Data-driven pricing</h3>
+        <p>We analyse recent comparable sales, demand signals and days-on-market to price your property precisely, so it sells fast without leaving money on the table.</p>
+        <div class="bars" aria-hidden="true"><i style="--h:40%"></i><i style="--h:55%"></i><i style="--h:48%"></i><i style="--h:70%"></i><i style="--h:62%"></i><i style="--h:85%"></i><i style="--h:78%"></i><i style="--h:95%"></i></div>
+      </div>
+      <div class="bento-card glass reveal">
+        <div class="icon"><svg viewBox="0 0 24 24"><path d="M12 2 2 7l10 5 10-5-10-5z"/><path d="m2 17 10 5 10-5"/><path d="m2 12 10 5 10-5"/></svg></div>
+        <h3>3D virtual tours</h3>
+        <p>Walk through homes from your phone before you ever book a viewing.</p>
+      </div>
+      <div class="bento-card glass reveal">
+        <div class="icon"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg></div>
+        <h3>Verified listings</h3>
+        <p>Every property is inspected and every document checked. No surprises.</p>
+      </div>
+      <div class="bento-card glass reveal">
+        <div class="icon"><svg viewBox="0 0 24 24"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
+        <h3>Instant alerts</h3>
+        <p>Get notified the moment a matching home hits the market.</p>
+      </div>
+      <div class="bento-card glass reveal">
+        <div class="icon"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+        <h3>Real humans, fast</h3>
+        <p>A dedicated agent who replies in minutes, not days.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= TOOLS ================= -->
+<section class="section" id="tools">
+  <div class="container">
+    <div class="section-head center reveal">
+      <p class="eyebrow">// Smart tools</p>
+      <h2>Run the numbers in seconds</h2>
+    </div>
+    <div class="tools-grid">
+      <!-- Mortgage calculator -->
+      <div class="tool glass reveal">
+        <h3>Home finance calculator</h3>
+        <div class="range">
+          <label>Home price <output id="oPrice"></output></label>
+          <input type="range" id="mPrice" min="2500000" max="200000000" step="500000" value="25000000">
+        </div>
+        <div class="range">
+          <label>Down payment <output id="oDown"></output></label>
+          <input type="range" id="mDown" min="15" max="70" step="1" value="30">
+        </div>
+        <div class="range">
+          <label>Profit / markup rate <output id="oRate"></output></label>
+          <input type="range" id="mRate" min="5" max="25" step="0.25" value="14">
+        </div>
+        <div class="range">
+          <label>Financing term <output id="oTerm"></output></label>
+          <input type="range" id="mTerm" min="3" max="25" step="1" value="20">
+        </div>
+        <div class="result">
+          <span class="muted">Est. monthly instalment</span>
+          <strong class="grad" id="mResult">Rs 0</strong>
+          <span class="muted small">Indicative only. Actual bank rates (KIBOR + margin), fees and taxes vary.</span>
+        </div>
+      </div>
+
+      <!-- Instant estimate -->
+      <div class="tool glass reveal">
+        <h3>Instant price estimate</h3>
+        <div class="row">
+          <label class="fld"><span>Size</span><input type="number" id="eSize" value="10" min="1" step="0.5"></label>
+          <label class="fld"><span>Unit</span>
+            <select id="eUnit"><option value="1" selected>Marla</option><option value="20">Kanal</option></select>
+          </label>
+        </div>
+        <label class="fld"><span>Area / society</span><select id="eArea"></select></label>
+        <div class="row">
+          <label class="fld"><span>Property</span>
+            <select id="eType"><option value="1">Plot only</option><option value="1.35">Grey structure</option><option value="1.7" selected>Constructed house</option></select>
+          </label>
+          <label class="fld"><span>Position</span>
+            <select id="ePos"><option value="1" selected>Standard</option><option value="1.1">Corner</option><option value="1.12">Park facing</option><option value="1.2">Main boulevard</option></select>
+          </label>
+        </div>
+        <div class="result">
+          <span class="muted">Estimated range</span>
+          <strong class="grad" id="eResult">-</strong>
+          <span class="muted small">Ballpark only. <a href="#sell">Get an exact valuation from an agent →</a></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= SELL ================= -->
+<section class="section" id="sell">
+  <div class="container sell-grid">
+    <div class="sell-copy reveal">
+      <p class="eyebrow">// Sell with us</p>
+      <h2>Get your free, expert valuation in <span class="grad">24 hours</span></h2>
+      <p class="muted">A precise price from a local specialist, backed by real sales data. No obligation, no pressure.</p>
+      <ul class="checks">
+        <li>Pro photography, drone shots &amp; 3D tour included</li>
+        <li>Listed on every major property portal</li>
+        <li>Targeted ads to our pre-qualified buyer network</li>
+        <li>Expert negotiation to maximise your sale price</li>
+      </ul>
+    </div>
+    <form class="form glass reveal" id="valuationForm" data-form="valuation">
+      <h3>Request a valuation</h3>
+      <div class="row">
+        <input name="name" type="text" placeholder="Full name" required>
+        <input name="phone" type="tel" placeholder="Phone" required>
+      </div>
+      <input name="email" type="email" placeholder="Email address" required>
+      <input name="address" type="text" placeholder="Property address (block, street, house no.)" required>
+      <div class="row">
+        <select name="property_type" required>
+          <option value="">Property type</option>
+          <option>House</option><option>Apartment</option><option>Plot</option><option>Commercial</option>
+        </select>
+        <input name="size" type="text" placeholder="Size, e.g. 10 Marla">
+      </div>
+      <div class="row">
+        <select name="timeline">
+          <option value="">Timeline</option>
+          <option>ASAP</option><option>Within 3 months</option><option>3–6 months</option><option>Just curious</option>
+        </select>
+        <input name="society" type="text" placeholder="Society / area">
+      </div>
+      <button class="btn btn-primary btn-block" type="submit">Get my free valuation →</button>
+      <p class="form-success" hidden>✓ Received! An agent will contact you within 24 hours.</p>
+    </form>
+  </div>
+</section>
+
+<!-- ================= PROCESS ================= -->
+<section class="section" id="process">
+  <div class="container">
+    <div class="section-head center reveal">
+      <p class="eyebrow">// The process</p>
+      <h2>Four steps. Zero guesswork.</h2>
+      <div class="seg seg-lg" id="processSeg">
+        <button class="active" data-tab="buy">Buying</button>
+        <button data-tab="selling">Selling</button>
+      </div>
+    </div>
+    <div class="timeline" data-panel="buy">
+      <div class="step glass reveal"><span class="mono">01</span><h4>Define your brief</h4><p>Budget, location, must-haves. We build a smart shortlist.</p></div>
+      <div class="step glass reveal"><span class="mono">02</span><h4>Tour virtually or in person</h4><p>3D tours first, then viewings at times that suit you.</p></div>
+      <div class="step glass reveal"><span class="mono">03</span><h4>Offer with data</h4><p>Comparable-sales analysis so you never overpay.</p></div>
+      <div class="step glass reveal"><span class="mono">04</span><h4>Get the keys</h4><p>We coordinate inspection, legal and closing.</p></div>
+    </div>
+    <div class="timeline" data-panel="selling" hidden>
+      <div class="step glass"><span class="mono">01</span><h4>Free valuation</h4><p>Data-backed price from a local specialist.</p></div>
+      <div class="step glass"><span class="mono">02</span><h4>Launch campaign</h4><p>Pro media, portal listings and targeted ads.</p></div>
+      <div class="step glass"><span class="mono">03</span><h4>Viewings &amp; offers</h4><p>We vet buyers and negotiate for you.</p></div>
+      <div class="step glass"><span class="mono">04</span><h4>Close the deal</h4><p>Paperwork handled through to completion.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= TESTIMONIALS ================= -->
+<section class="section">
+  <div class="container">
+    <div class="section-head center reveal">
+      <p class="eyebrow">// Client stories</p>
+      <h2>Trusted by hundreds of movers</h2>
+    </div>
+    <div class="quote-grid">
+      <blockquote class="glass reveal"><div class="stars">★★★★★</div><p>"Sold in 12 days, above asking. The live updates meant we always knew exactly what was happening."</p><cite>Sample review: replace with a real one</cite></blockquote>
+      <blockquote class="glass reveal"><div class="stars">★★★★★</div><p>"The 3D tours saved us so much time. We only visited two homes and bought the second one."</p><cite>Sample review: replace with a real one</cite></blockquote>
+      <blockquote class="glass reveal"><div class="stars">★★★★★</div><p>"Honest valuation, stunning photos and serious buyers only. Incredibly professional team."</p><cite>Sample review: replace with a real one</cite></blockquote>
+    </div>
+    <div class="reviews-cta reveal">
+      <a class="btn btn-ghost" data-site="google" target="_blank" rel="noopener" href="#"><svg viewBox="0 0 24 24" width="18" aria-hidden="true"><path fill="#4285F4" d="M22.6 12.2c0-.8-.1-1.5-.2-2.2H12v4.2h5.9a5 5 0 0 1-2.2 3.3v2.7h3.6c2.1-1.9 3.3-4.8 3.3-8z"/><path fill="#34A853" d="M12 23c3 0 5.5-1 7.3-2.7l-3.6-2.8c-1 .7-2.2 1.1-3.7 1.1-2.9 0-5.3-1.9-6.2-4.5H2.1v2.8A11 11 0 0 0 12 23z"/><path fill="#FBBC05" d="M5.8 14.1a6.6 6.6 0 0 1 0-4.2V7.1H2.1a11 11 0 0 0 0 9.8l3.7-2.8z"/><path fill="#EA4335" d="M12 5.4c1.6 0 3.1.6 4.2 1.7l3.2-3.2A11 11 0 0 0 2.1 7.1l3.7 2.8C6.7 7.3 9.1 5.4 12 5.4z"/></svg> See our reviews on Google</a>
+      <a class="btn btn-primary" data-site="google-review" target="_blank" rel="noopener" href="#">★ Write a review</a>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CONTACT ================= -->
+<section class="section" id="contact">
+  <div class="container">
+    <div class="cta glass reveal">
+      <div class="contact-info">
+        <p class="eyebrow">// Get in touch</p>
+        <h2>Ready to make your move?</h2>
+        <p class="muted">Talk to an agent today. We usually reply within 15 minutes during business hours.</p>
+        <ul class="contact-list">
+          <li><span class="mono muted">PHONE</span><a data-site="phone" href="#">+92 300 819 7052</a></li>
+          <li><span class="mono muted">WHATSAPP</span><a data-site="whatsapp" target="_blank" rel="noopener" href="#">Chat with us instantly →</a></li>
+          <li><span class="mono muted">FACEBOOK</span><a data-site="messenger" target="_blank" rel="noopener" href="https://www.facebook.com/share/1FCS4tEiaN/">Message us on Facebook →</a></li>
+          <li><span class="mono muted">INSTAGRAM</span><a data-site="instagram" target="_blank" rel="noopener" href="https://www.instagram.com/alfatah_marketing">@alfatah_marketing →</a></li>
+          <li><span class="mono muted">EMAIL</span><a data-site="email" href="#">info@alfatah-marketing.com</a></li>
+          <li><span class="mono muted">OFFICE</span><span data-site="address-inline">Ghosia Colony, 2 km Kattar Band Road, Thokar Niaz Baig, Lahore 53700</span></li>
+          <li><span class="mono muted">HOURS</span>Mon–Sun · 9 AM – 9 PM</li>
+        </ul>
+        <div class="cta-actions">
+          <a class="btn btn-whatsapp" data-site="whatsapp" target="_blank" rel="noopener" href="#"><svg viewBox="0 0 24 24" width="18" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.1-4.5-3.9-4.7-4.1-.1-.2-1.1-1.5-1.1-2.9s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.3 0 .5l-.4.6c-.2.2-.3.4-.1.7.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.4 2.4 1.5.3.1.5.1.7-.1l.9-1.1c.2-.3.4-.2.7-.1l2 .9c.3.1.5.2.5.3.1.2.1.7-.1 1.3z"/></svg> WhatsApp us</a>
+          <a class="btn btn-messenger" data-site="messenger" target="_blank" rel="noopener" href="https://www.facebook.com/share/1FCS4tEiaN/"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2C6.36 2 2 6.13 2 11.7c0 2.91 1.19 5.44 3.14 7.17.16.15.26.35.27.57l.05 1.78a.8.8 0 0 0 1.12.71l1.98-.87c.17-.08.36-.09.53-.04.91.25 1.88.38 2.91.38 5.64 0 10-4.13 10-9.7S17.64 2 12 2zm6 7.46-2.94 4.66a1.5 1.5 0 0 1-2.17.4l-2.34-1.75a.6.6 0 0 0-.72 0l-3.16 2.4c-.42.32-.97-.18-.69-.63l2.94-4.66a1.5 1.5 0 0 1 2.17-.4l2.34 1.75a.6.6 0 0 0 .72 0l3.16-2.4c.42-.32.97.18.69.63z"/></svg> Message on Facebook</a>
+          <a class="btn btn-ghost" href="contact.html">Full contact page →</a>
+        </div>
+      </div>
+      <form class="form" id="contactForm" data-form="contact">
+        <div class="row">
+          <input name="name" type="text" placeholder="Full name" required>
+          <input name="phone" type="tel" placeholder="Phone">
+        </div>
+        <input name="email" type="email" placeholder="Email address" required>
+        <select name="interest">
+          <option>I'm looking to buy</option>
+          <option>I'm looking to sell</option>
+          <option>Other enquiry</option>
+        </select>
+        <textarea name="message" id="contactMessage" rows="4" placeholder="How can we help?" required></textarea>
+        <button class="btn btn-primary btn-block" type="submit">Send message →</button>
+        <p class="form-success" hidden>✓ Thanks! We'll be in touch shortly.</p>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- ================= FOOTER ================= -->
+<footer class="footer">
+  <div class="container footer-grid">
+    <div>
+      <a href="#home" class="logo"><span class="logo-mark"><svg viewBox="0 0 32 32"><path d="M8 16.5 16 9l8 7.5V24H8z"/></svg></span>Al-Fatah<span class="amp">Marketing</span></a>
+      <p class="muted">Smarter real estate for buyers and sellers.</p>
+      <div class="social-links">
+        <a class="soc soc-fb" data-site="facebook" href="https://www.facebook.com/share/1FCS4tEiaN/" target="_blank" rel="noopener" aria-label="Al-Fatah Marketing on Facebook" title="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13.5 21v-7.5h2.5l.4-3h-2.9V8.6c0-.87.24-1.46 1.49-1.46h1.6V4.47A21 21 0 0 0 14.27 4.3c-2.3 0-3.87 1.4-3.87 3.98v2.22H7.8v3h2.6V21h3.1z"/></svg></a>
+        <a class="soc soc-ig" data-site="instagram" href="https://www.instagram.com/alfatah_marketing" target="_blank" rel="noopener" aria-label="Al-Fatah Marketing on Instagram" title="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="17.3" cy="6.7" r="1.2"/></svg></a>
+      </div>
+    </div>
+    <div><h5>Explore</h5><a href="#listings">Buy a property</a><a href="#sell">Sell a property</a><a href="#tools">Calculators</a></div>
+    <div><h5>Company</h5><a href="#process">How it works</a><a href="contact.html">Contact us</a><a data-site="google" target="_blank" rel="noopener" href="#">Google reviews</a></div>
+    <div class="footer-contact"><h5>Office</h5><p data-site="address"></p><a data-site="phone" href="#"></a><a data-site="email" href="#"></a></div>
+  </div>
+  <div class="container copyright mono">© <span data-site="year"></span> Al-Fatah Marketing. All rights reserved.</div>
+</footer>
+
+<a class="messenger" data-site="messenger" href="https://www.facebook.com/share/1FCS4tEiaN/" target="_blank" rel="noopener" aria-label="Message us on Facebook Messenger" title="Message us on Facebook">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2C6.36 2 2 6.13 2 11.7c0 2.91 1.19 5.44 3.14 7.17.16.15.26.35.27.57l.05 1.78a.8.8 0 0 0 1.12.71l1.98-.87c.17-.08.36-.09.53-.04.91.25 1.88.38 2.91.38 5.64 0 10-4.13 10-9.7S17.64 2 12 2zm6 7.46-2.94 4.66a1.5 1.5 0 0 1-2.17.4l-2.34-1.75a.6.6 0 0 0-.72 0l-3.16 2.4c-.42.32-.97-.18-.69-.63l2.94-4.66a1.5 1.5 0 0 1 2.17-.4l2.34 1.75a.6.6 0 0 0 .72 0l3.16-2.4c.42-.32.97.18.69.63z"/></svg>
+</a>
+
+<a class="whatsapp" data-site="whatsapp" href="#" target="_blank" rel="noopener" aria-label="Chat on WhatsApp">
+  <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.1-4.5-3.9-4.7-4.1-.1-.2-1.1-1.5-1.1-2.9s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.3 0 .5l-.4.6c-.2.2-.3.4-.1.7.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.4 2.4 1.5.3.1.5.1.7-.1l.9-1.1c.2-.3.4-.2.7-.1l2 .9c.3.1.5.2.5.3.1.2.1.7-.1 1.3z"/></svg>
+</a>
+
+<div class="modal" id="modal" hidden>
+  <div class="modal-box glass">
+    <button class="modal-close" id="modalClose" aria-label="Close">&times;</button>
+    <div id="modalBody"></div>
+  </div>
+</div>
+
+<script src="config.js"></script>
+<script src="listings.js"></script>
+<!-- Live listings from the CRM. Once the CRM has listings, they replace the samples in listings.js. -->
+<script src="https://office.alfatah-marketing.com/feed/listings.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
