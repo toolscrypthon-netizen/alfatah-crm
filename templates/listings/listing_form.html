@@ -1,0 +1,197 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}{% if listing %}Edit {{ listing.ref }}{% else %}Add a listing{% endif %} · Alfatah CRM{% endblock %}
+{% block head %}<link href="{% static 'css/listings.css' %}" rel="stylesheet">{% endblock %}
+{% block content %}
+<div class="wz" id="wz" data-editing="{% if listing %}1{% endif %}" data-max-photos="{{ max_photos }}"
+     data-existing-photos="{{ listing.photos.count|default:0 }}">
+  <div class="wz-top">
+    <a class="small" href="{% if listing %}{{ listing.get_absolute_url }}{% else %}{% url 'listing_list' %}{% endif %}">&larr; {% if listing %}Back to listing{% else %}Listings{% endif %}</a>
+    <div class="wz-progress" aria-hidden="true"><span id="wzBar"></span></div>
+    <div class="wz-steplabel"><span id="wzStepNo">Step 1 of 6</span> · <span id="wzStepName">Property</span></div>
+  </div>
+
+  {% if from_lead %}<div class="alert alert-info py-2 small">Filled in from lead <a href="{{ from_lead.get_absolute_url }}">#{{ from_lead.pk }} {{ from_lead.title|truncatechars:40 }}</a>. Check the details and add photos.</div>{% endif %}
+
+  <div class="alert alert-danger py-2" id="wzErrors" {% if not form.errors %}hidden{% endif %}>
+    {% for field, errs in form.errors.items %}{% for e in errs %}<div>{{ e }}</div>{% endfor %}{% endfor %}
+  </div>
+
+  <form method="post" enctype="multipart/form-data" id="wzForm" novalidate
+        action="{% if listing %}{% url 'listing_edit' listing.pk %}{% else %}{% url 'listing_create' %}{% endif %}">
+    {% csrf_token %}
+    {% if from_lead %}<input type="hidden" name="lead" value="{{ from_lead.pk }}">{% endif %}
+
+    {# ---------- 1. What ---------- #}
+    <section class="wz-step" data-name="Property" data-fields="purpose property_type">
+      <h1 class="wz-q">What are you listing?</h1>
+      <div class="seg seg-lg mb-4" role="radiogroup" aria-label="Sale or rent">
+        {% for value, label in Listing.Purpose.choices %}
+          <input type="radio" class="btn-check" name="purpose" id="purpose-{{ value }}" value="{{ value }}"
+                 {% if form.purpose.value == value %}checked{% endif %}>
+          <label for="purpose-{{ value }}">{{ label }}</label>
+        {% endfor %}
+      </div>
+      <div class="tiles" role="radiogroup" aria-label="Property type">
+        {% for value, label in Listing.PropertyType.choices %}
+          <input type="radio" class="btn-check" name="property_type" id="type-{{ value }}" value="{{ value }}"
+                 data-advance {% if form.property_type.value == value %}checked{% endif %}>
+          <label class="tile" for="type-{{ value }}">
+            <span class="tile-icon">{% if value == 'house' %}🏠{% elif value == 'flat' %}🏢{% elif value == 'plot' %}📐{% elif value == 'commercial' %}🏬{% elif value == 'farmhouse' %}🌳{% else %}🏷️{% endif %}</span>
+            <span>{{ label }}</span>
+          </label>
+        {% endfor %}
+      </div>
+    </section>
+
+    {# ---------- 2. Where ---------- #}
+    <section class="wz-step" data-name="Location" data-fields="city area_name location_text" hidden>
+      <h1 class="wz-q">Where is it?</h1>
+      <div class="mb-3 {% if cities|length < 2 %}d-none{% endif %}">
+        <label class="form-label" for="wzCity">City</label>
+        <select class="form-select form-select-lg" name="city" id="wzCity">
+          {% for c in cities %}<option value="{{ c.pk }}" {% if form.city.value|stringformat:'s' == c.pk|stringformat:'s' %}selected{% endif %}>{{ c.name }}</option>{% endfor %}
+        </select>
+      </div>
+      <label class="form-label" for="wzArea">Area or society</label>
+      <input class="form-control form-control-lg" name="area_name" id="wzArea" autocomplete="off"
+             value="{{ form.area_name.value|default:'' }}" placeholder="Start typing, e.g. DHA, Bahria">
+      <div class="chips mt-2" id="wzAreaList" aria-label="Areas"></div>
+      <label class="form-label mt-3" for="wzBlock">Block, street or house no. <span class="text-muted">(optional)</span></label>
+      <input class="form-control" name="location_text" id="wzBlock" value="{{ form.location_text.value|default:'' }}" placeholder="e.g. Block C">
+    </section>
+
+    {# ---------- 3. Size ---------- #}
+    <section class="wz-step" data-name="Size" data-fields="size size_unit bedrooms bathrooms" hidden>
+      <h1 class="wz-q">How big is it?</h1>
+      <div class="chips mb-3" id="wzSizeQuick"></div>
+      <div class="input-group input-group-lg mb-2">
+        <input class="form-control" name="size" id="wzSize" inputmode="decimal" placeholder="Size"
+               value="{{ form.size.value|default_if_none:'' }}">
+      </div>
+      <div class="seg mb-4" role="radiogroup" aria-label="Unit">
+        {% for value, label in Listing.SizeUnit.choices %}
+          <input type="radio" class="btn-check" name="size_unit" id="unit-{{ value }}" value="{{ value }}"
+                 {% if form.size_unit.value == value %}checked{% endif %}>
+          <label for="unit-{{ value }}">{{ label }}</label>
+        {% endfor %}
+      </div>
+      <div id="wzRooms">
+        <div class="stepper-row">
+          <span>Bedrooms</span>
+          <div class="stepper" data-target="wzBeds"><button type="button" data-d="-1" aria-label="Fewer bedrooms">−</button>
+            <input name="bedrooms" id="wzBeds" inputmode="numeric" value="{{ form.bedrooms.value|default_if_none:'' }}" placeholder="–" aria-label="Bedrooms">
+            <button type="button" data-d="1" aria-label="More bedrooms">+</button></div>
+        </div>
+        <div class="stepper-row">
+          <span>Bathrooms</span>
+          <div class="stepper" data-target="wzBaths"><button type="button" data-d="-1" aria-label="Fewer bathrooms">−</button>
+            <input name="bathrooms" id="wzBaths" inputmode="numeric" value="{{ form.bathrooms.value|default_if_none:'' }}" placeholder="–" aria-label="Bathrooms">
+            <button type="button" data-d="1" aria-label="More bathrooms">+</button></div>
+        </div>
+      </div>
+    </section>
+
+    {# ---------- 4. Price ---------- #}
+    <section class="wz-step" data-name="Price" data-fields="price" hidden>
+      <h1 class="wz-q" id="wzPriceQ">What's the asking price?</h1>
+      <input type="hidden" name="price" id="wzPrice" value="{{ form.price.value|default_if_none:'' }}">
+      <div class="price-box">
+        <span class="price-rs">Rs</span>
+        <input class="price-input" id="wzPriceAmount" inputmode="decimal" placeholder="0" aria-label="Amount">
+      </div>
+      <div class="seg mt-3" id="wzPriceUnit" role="radiogroup" aria-label="Amount in">
+        <input type="radio" class="btn-check" name="_price_unit" id="pu-crore" value="10000000"><label for="pu-crore">Crore</label>
+        <input type="radio" class="btn-check" name="_price_unit" id="pu-lakh" value="100000"><label for="pu-lakh">Lakh</label>
+        <input type="radio" class="btn-check" name="_price_unit" id="pu-thousand" value="1000"><label for="pu-thousand">Thousand</label>
+      </div>
+      <p class="price-read mt-3" id="wzPriceRead">&nbsp;</p>
+      <p class="text-muted small">Leave empty for "price on request".</p>
+    </section>
+
+    {# ---------- 5. Photos ---------- #}
+    <section class="wz-step" data-name="Photos" data-fields="photos" hidden>
+      <h1 class="wz-q">Add photos</h1>
+      <p class="text-muted small mb-3">The first photo is the cover on the website. Tap a photo to make it the cover.
+        {% if listing %}This listing already has {{ listing.photos.count }} photo(s); new ones are added after them.{% endif %}</p>
+      <div class="photo-actions">
+        <label class="btn btn-primary btn-lg" for="wzCamera">📷 Take photo</label>
+        <label class="btn btn-dark btn-lg" for="wzGallery">🖼️ From gallery</label>
+      </div>
+      <input type="file" id="wzCamera" accept="image/*" capture="environment" hidden>
+      <input type="file" id="wzGallery" accept="image/*" multiple hidden>
+      <div class="photo-grid mt-3" id="wzPhotos"></div>
+      <p class="text-muted small mt-2" id="wzPhotoCount"></p>
+    </section>
+
+    {# ---------- 6. Details ---------- #}
+    <section class="wz-step" data-name="Details" data-fields="title description owner_name owner_phone badge on_website featured" hidden>
+      <h1 class="wz-q">Almost done</h1>
+      <div class="summary card mb-3"><div class="card-body d-flex gap-3 align-items-center">
+        <div class="summary-img" id="wzSumImg"></div>
+        <div class="min-w-0"><div class="fw-semibold" id="wzSumTitle"></div>
+          <div class="small text-muted" id="wzSumLoc"></div><div class="mono" id="wzSumPrice"></div></div>
+      </div></div>
+
+      <label class="form-label">What's special about it? <span class="text-muted">(tap all that apply)</span></label>
+      <div class="chips mb-2" id="wzFeatures">
+        {% for f in common_features %}
+          <input type="checkbox" class="btn-check" name="feature" id="feat-{{ forloop.counter }}" value="{{ f }}" {% if f in chosen_features %}checked{% endif %}>
+          <label class="chip" for="feat-{{ forloop.counter }}">{{ f }}</label>
+        {% endfor %}
+        {% for f in extra_features %}
+          <input type="checkbox" class="btn-check" name="feature" id="feat-x{{ forloop.counter }}" value="{{ f }}" checked>
+          <label class="chip" for="feat-x{{ forloop.counter }}">{{ f }}</label>
+        {% endfor %}
+      </div>
+      <div class="input-group mb-3">
+        <input class="form-control" id="wzFeatureNew" placeholder="Add your own, e.g. Near Kattar Band Road" maxlength="60">
+        <button class="btn btn-outline-secondary" type="button" id="wzFeatureAdd">Add</button>
+      </div>
+
+      <label class="form-label" for="wzTitle">Title</label>
+      <input class="form-control mb-1" name="title" id="wzTitle" maxlength="150" value="{{ form.title.value|default:'' }}">
+      <p class="small text-muted">Leave empty to use <span id="wzAutoTitle"></span>.</p>
+
+      <label class="form-label" for="wzDesc">Description <span class="text-muted">(optional)</span></label>
+      <textarea class="form-control mb-3" name="description" id="wzDesc" rows="3" placeholder="A line or two buyers should know">{{ form.description.value|default:'' }}</textarea>
+
+      <div class="card mb-3"><div class="card-body">
+        <div class="small text-muted mb-2">🔒 Owner details stay in the CRM. They are never shown on the website.</div>
+        <div class="row g-2">
+          <div class="col-6"><input class="form-control" name="owner_name" placeholder="Owner name" value="{{ form.owner_name.value|default:'' }}" aria-label="Owner name"></div>
+          <div class="col-6"><input class="form-control" name="owner_phone" type="tel" inputmode="tel" placeholder="Owner phone" value="{{ form.owner_phone.value|default:'' }}" aria-label="Owner phone"></div>
+        </div>
+      </div></div>
+
+      <div class="switch-row">
+        <label for="wzWeb"><strong>Show on website</strong><br><span class="small text-muted">alfatah-marketing.com. Needs a photo{% if not user.is_admin %} and an admin's approval{% endif %}.</span></label>
+        <input class="form-check-input" type="checkbox" role="switch" name="on_website" id="wzWeb" {% if form.on_website.value %}checked{% endif %}>
+      </div>
+      <div class="switch-row">
+        <label for="wzFeat"><strong>Featured</strong><br><span class="small text-muted">Shown first, with a highlighted badge</span></label>
+        <input class="form-check-input" type="checkbox" role="switch" name="featured" id="wzFeat" {% if form.featured.value %}checked{% endif %}>
+      </div>
+      <label class="form-label mt-2" for="wzBadge">Badge on the photo <span class="text-muted">(optional)</span></label>
+      <input class="form-control mb-2" name="badge" id="wzBadge" maxlength="30" placeholder="e.g. Hot deal, New, Near office" value="{{ form.badge.value|default:'' }}">
+    </section>
+
+    <div class="wz-bar">
+      <button type="button" class="btn btn-dark btn-lg" id="wzBack">Back</button>
+      <button type="button" class="btn btn-primary btn-lg flex-grow-1" id="wzNext">Next</button>
+      <button type="submit" class="btn btn-success btn-lg flex-grow-1" id="wzSave" hidden>{% if listing %}Save changes{% else %}Save listing{% endif %}</button>
+    </div>
+    {% if listing %}<button type="submit" class="btn btn-outline-success w-100 mt-2" id="wzSaveNow">Save changes now</button>{% endif %}
+  </form>
+
+  <div class="wz-uploading" id="wzUploading" hidden>
+    <div class="card"><div class="card-body text-center p-4">
+      <div class="fw-semibold mb-2" id="wzUpText">Uploading…</div>
+      <div class="wz-progress"><span id="wzUpBar"></span></div>
+      <div class="small text-muted mt-2">Keep this screen open.</div>
+    </div></div>
+  </div>
+</div>
+{{ city_areas|json_script:"wzAreas" }}
+{% endblock %}
+{% block scripts %}<script src="{% static 'js/listing-wizard.js' %}"></script>{% endblock %}

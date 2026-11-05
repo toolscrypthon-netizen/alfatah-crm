@@ -17,6 +17,11 @@ class User(AbstractUser):
         return self.is_superuser or self.role in (self.Role.ADMIN, self.Role.MANAGER)
 
     @property
+    def is_admin(self):
+        """Only admins approve listings for the public website."""
+        return self.is_superuser or self.role == self.Role.ADMIN
+
+    @property
     def can_manage(self):
         return self.sees_all_leads
 

@@ -16,6 +16,13 @@ an API, or are added by hand, and the team works them through calls, comments, s
 - **Dashboard** with today's numbers, your follow-ups, latest leads, and a team table for managers.
 - **Roles**: admins and managers see and assign everything; agents see their own and unassigned leads,
   and a lead becomes theirs when they claim it or log a call on it.
+- **Listings**: the agency's own properties, added from a phone in six quick steps (type, area, size,
+  price, photos, details). Photos are shrunk on the phone so uploads work on mobile data. A listing can
+  be made from a seller lead in one tap, and is linked to a lead automatically when the owner's phone
+  matches. Owner details stay private.
+- **Website**: listings an **admin** approves appear on alfatah-marketing.com automatically, and drop
+  off when marked sold or withdrawn. An agent's edits send a listing back for approval. The website
+  loads them from `/feed/listings.js` (JSON at `/feed/listings.json`).
 - **Cities** are data, not code: add Karachi in *Settings & team → Cities* and its areas, and the
   collectors and filters pick it up.
 

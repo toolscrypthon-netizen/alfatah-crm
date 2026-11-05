@@ -15,6 +15,7 @@
     {% endif %}
     {% if not lead.assigned_to %}<form method="post" action="{% url 'lead_claim' lead.pk %}">{% csrf_token %}<button class="btn btn-warning">Assign to me</button></form>{% endif %}
     {% if can_edit %}<a class="btn btn-outline-secondary" href="{% url 'lead_edit' lead.pk %}">Edit</a>{% endif %}
+    {% if lead.intent == 'selling' or lead.intent == 'rent_out' %}<a class="btn btn-outline-primary" href="{% url 'listing_create' %}?lead={{ lead.pk }}">+ Make a listing</a>{% endif %}
   </div>
 </div>
 
@@ -26,6 +27,13 @@
 
 <div class="row g-3">
   <div class="col-lg-4 order-lg-2">
+    {% with listings=lead.listings.all %}{% if listings %}
+    <div class="card mb-3"><div class="card-header"><strong>Listings</strong></div>
+      <div class="list-group list-group-flush">
+        {% for l in listings %}<a class="list-group-item list-group-item-action small" href="{{ l.get_absolute_url }}">{{ l.ref }} · {{ l.display_title }} <span class="text-muted">({{ l.get_status_display }})</span></a>{% endfor %}
+      </div>
+    </div>
+    {% endif %}{% endwith %}
     <div class="card mb-3"><div class="card-header"><strong>Details</strong></div>
       <dl class="row card-body mb-0 small">
         <dt class="col-5">Wants</dt><dd class="col-7">{{ lead.get_intent_display }}</dd>
