@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     "django.contrib.humanize",
     "accounts",
     "leads",
+    "listings",
 ]
 
 MIDDLEWARE = [
@@ -100,6 +101,13 @@ STORAGES = {
         else "django.contrib.staticfiles.storage.StaticFilesStorage"
     },
 }
+
+# Listing photos. Kept in a Docker volume so they survive rebuilds; served by the app itself
+# (see listings.views.photo) so no web server change is needed.
+MEDIA_URL = "/media/"
+MEDIA_ROOT = Path(os.environ.get("MEDIA_ROOT", BASE_DIR / "media"))
+# Phones send several photos in one go.
+DATA_UPLOAD_MAX_NUMBER_FILES = 30
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 

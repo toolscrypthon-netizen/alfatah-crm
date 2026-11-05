@@ -8,6 +8,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
   <link href="{% static 'vendor/bootstrap.min.css' %}" rel="stylesheet">
   <link href="{% static 'css/app.css' %}" rel="stylesheet">
+  {% block head %}{% endblock %}
 </head>
 <body>
 {% if user.is_authenticated %}
@@ -26,7 +27,10 @@
           <a class="nav-link" href="{% url 'follow_up_list' %}">Follow-ups
             {% if nav_overdue %}<span class="badge text-bg-danger">{{ nav_overdue }}</span>{% endif %}</a>
         </li>
+        <li class="nav-item"><a class="nav-link" href="{% url 'listing_list' %}{% if nav_pending_listings %}?status=pending{% endif %}">Listings
+          {% if nav_pending_listings %}<span class="badge text-bg-danger" title="Waiting for your approval">{{ nav_pending_listings }}</span>{% endif %}</a></li>
         <li class="nav-item"><a class="nav-link" href="{% url 'lead_create' %}">+ Add lead</a></li>
+        <li class="nav-item"><a class="nav-link nav-add-listing" href="{% url 'listing_create' %}">+ Add listing</a></li>
       </ul>
       <ul class="navbar-nav">
         {% if user.can_manage %}<li class="nav-item"><a class="nav-link" href="{% url 'admin:index' %}">Settings &amp; team</a></li>{% endif %}

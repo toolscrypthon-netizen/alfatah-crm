@@ -8,7 +8,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 RUN DJANGO_SECRET_KEY=build-only python manage.py collectstatic --noinput \
-    && useradd --create-home crm && chown -R crm /app
+    && mkdir -p /app/media && useradd --create-home crm && chown -R crm /app
 USER crm
 
 EXPOSE 8000

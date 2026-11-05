@@ -85,10 +85,25 @@ Give admins the "Staff status" tick so they can open Settings.
 cd /opt/alfatah-crm && git pull && docker compose up -d --build
 ```
 
+Database changes are applied automatically when the app starts. Listing photos are kept in the
+`media` Docker volume, so they survive rebuilds.
+
+## Showing CRM listings on alfatah-marketing.com
+
+In the website's `index.html`, right after `<script src="listings.js"></script>`, add:
+
+```html
+<script src="https://office.alfatah-marketing.com/feed/listings.js"></script>
+```
+
+Until the CRM has an approved listing with a photo, the sample listings in `listings.js` keep showing.
+If the CRM is ever unreachable, the website falls back to those samples too.
+
 ## Backups
 
 ```bash
 docker compose exec -T db pg_dump -U crm crm | gzip > ~/crm-backup-$(date +%F).sql.gz
+docker compose exec -T web tar -czf - -C /app media > ~/crm-photos-$(date +%F).tar.gz
 ```
 
 Put that line in a daily cron job and copy the file off the server now and then.

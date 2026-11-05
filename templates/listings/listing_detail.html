@@ -1,0 +1,164 @@
+{% extends "base.html" %}
+{% load static crm humanize %}
+{% block title %}{{ listing.display_title }} · Alfatah CRM{% endblock %}
+{% block head %}<link href="{% static 'css/listings.css' %}" rel="stylesheet">{% endblock %}
+{% block content %}
+<div class="ld">
+  <a href="{% url 'listing_list' %}" class="small">&larr; Listings</a>
+  {% if request.GET.photos_failed %}<div class="alert alert-warning py-2 mt-2">{{ request.GET.photos_failed }} photo(s) didn't upload. Add them again below.</div>{% endif %}
+
+  <div class="gallery mt-2">
+    {% for p in photos %}
+      <a href="{{ p.get_absolute_url }}" target="_blank" class="gallery-item"><img src="{{ p.get_absolute_url }}" alt="Photo {{ forloop.counter }}" loading="lazy"></a>
+    {% empty %}
+      <div class="gallery-empty">No photos yet{% if can_edit %}: add some below so it can go on the website{% endif %}.</div>
+    {% endfor %}
+  </div>
+  {% if photos|length > 1 %}<div class="small text-muted text-center mt-1">Swipe for {{ photos|length }} photos</div>{% endif %}
+
+  <div class="d-flex justify-content-between align-items-start gap-2 mt-3">
+    <div class="min-w-0">
+      <h1 class="h4 mb-1">{{ listing.display_title }}</h1>
+      <div class="text-muted">{{ listing.location_label }}</div>
+    </div>
+    <div class="text-end">
+      <div class="ld-price">{% if listing.price %}{{ listing.price|pkr }}{% else %}On request{% endif %}</div>
+      {% if listing.purpose == 'rent' and listing.price %}<div class="small text-muted">per month</div>{% endif %}
+    </div>
+  </div>
+
+  <div class="d-flex flex-wrap gap-2 align-items-center my-2">
+    <span class="lc-status st-{{ listing.status }} position-static">{{ listing.get_status_display }}</span>
+    {% if listing.is_live %}<span class="badge status-won">🌐 On the website</span>
+    {% elif not listing.on_website %}<span class="badge status-lost">Hidden from website</span>
+    {% elif listing.awaiting_approval %}<span class="badge status-contacted">⏳ Waiting for admin approval</span>
+    {% elif not photos %}<span class="badge status-contacted">Needs a photo for the website</span>
+    {% else %}<span class="badge status-lost">Not on website ({{ listing.get_status_display|lower }})</span>{% endif %}
+    <span class="small text-muted">{{ listing.ref }} · added {{ listing.created_at|naturaltime }}{% if listing.created_by %} by {{ listing.created_by }}{% endif %}</span>
+  </div>
+
+  {% if user.is_admin and listing.on_website and listing.status in Listing.LIVE_STATUSES %}
+  <div class="card mb-3 approve-card {% if not listing.is_approved %}pending{% endif %}"><div class="card-body">
+    {% if listing.is_approved %}
+      <div class="small text-muted mb-2">Approved for the website{% if listing.approved_by %} by {{ listing.approved_by }}{% endif %} {{ listing.approved_at|naturaltime }}.</div>
+      <form method="post" action="{% url 'listing_approve' listing.pk %}">{% csrf_token %}
+        <button class="btn btn-outline-secondary w-100" name="approve" value="0">Take off the website</button></form>
+    {% else %}
+      <div class="fw-semibold mb-1">Ready for the website?</div>
+      <div class="small text-muted mb-2">{% if listing.created_by %}{{ listing.created_by }} added this.{% endif %} Check the photos and details, then approve to publish it on alfatah-marketing.com.</div>
+      <form method="post" action="{% url 'listing_approve' listing.pk %}">{% csrf_token %}
+        <button class="btn btn-success btn-lg w-100" name="approve" value="1">✓ Approve for website</button></form>
+    {% endif %}
+  </div></div>
+  {% endif %}
+
+  <div class="facts my-3">
+    <div><span>Type</span>{{ listing.type_label }}</div>
+    <div><span>For</span>{% if listing.purpose == 'rent' %}Rent{% else %}Sale{% endif %}</div>
+    {% if listing.size_label %}<div><span>Size</span>{{ listing.size_label }}</div>{% endif %}
+    {% if listing.bedrooms %}<div><span>Beds</span>{{ listing.bedrooms }}</div>{% endif %}
+    {% if listing.bathrooms %}<div><span>Baths</span>{{ listing.bathrooms }}</div>{% endif %}
+    {% if listing.price %}<div><span>Exact price</span>{{ listing.price|intcomma }}</div>{% endif %}
+  </div>
+
+  {% if listing.feature_list %}<div class="chips mb-3">{% for f in listing.feature_list %}<span class="chip static">{{ f }}</span>{% endfor %}</div>{% endif %}
+  {% if listing.description %}<p style="white-space: pre-line">{{ listing.description }}</p>{% endif %}
+
+  <div class="ld-actions">
+    <a class="btn btn-success btn-lg" href="https://wa.me/?text={{ share_text|urlencode }}" target="_blank" rel="noopener">Share on WhatsApp</a>
+    {% if can_edit %}<a class="btn btn-dark btn-lg" href="{% url 'listing_edit' listing.pk %}">Edit details</a>{% endif %}
+  </div>
+
+  {% if listing.owner_name or listing.owner_phone or listing.lead %}
+  <div class="card mt-3"><div class="card-header"><strong>Owner · private</strong></div><div class="card-body">
+    <div>{{ listing.owner_name|default:"" }}{% if listing.owner_phone %} · <a href="tel:{{ listing.owner_phone }}">{{ listing.owner_phone }}</a>{% endif %}</div>
+    {% if listing.owner_phone %}<div class="d-flex gap-2 mt-2"><a class="btn btn-outline-success btn-sm" href="tel:{{ listing.owner_phone }}">Call</a>
+      {% if listing.owner_whatsapp_url %}<a class="btn btn-outline-success btn-sm" href="{{ listing.owner_whatsapp_url }}" target="_blank" rel="noopener">WhatsApp</a>{% endif %}</div>{% endif %}
+    {% if listing.lead %}<div class="small mt-2">From lead <a href="{{ listing.lead.get_absolute_url }}">#{{ listing.lead.pk }} {{ listing.lead.title|truncatechars:40 }}</a></div>{% endif %}
+  </div></div>
+  {% endif %}
+
+  {% if can_edit %}
+  <div class="card mt-3"><div class="card-header"><strong>Status</strong></div><div class="card-body">
+    <form method="post" action="{% url 'listing_update_status' listing.pk %}" class="seg seg-wrap">{% csrf_token %}
+      {% for value, label in Listing.Status.choices %}
+        <button class="{% if listing.status == value %}on{% endif %}" name="status" value="{{ value }}">{{ label }}</button>
+      {% endfor %}
+    </form>
+    <form method="post" action="{% url 'listing_update_status' listing.pk %}" class="mt-3">{% csrf_token %}
+      {% if listing.on_website %}<button class="btn btn-outline-secondary w-100" name="on_website" value="0">Hide from website</button>
+      {% else %}<button class="btn btn-outline-primary w-100" name="on_website" value="1">Show on website</button>{% endif %}
+    </form>
+  </div></div>
+
+  <div class="card mt-3"><div class="card-header"><strong>Photos ({{ photos|length }}/{{ max_photos }})</strong></div><div class="card-body">
+    {% if photos %}
+    <div class="photo-grid mb-3">
+      {% for p in photos %}
+      <div class="photo {% if forloop.first %}cover{% endif %}">
+        <img src="{{ p.get_absolute_url }}" alt="Photo {{ forloop.counter }}" loading="lazy">
+        {% if forloop.first %}<span class="photo-tag">Cover</span>{% else %}
+          <form method="post" action="{% url 'listing_photo_cover' p.pk %}" class="photo-cover-form">{% csrf_token %}<button class="photo-tag as-btn">Make cover</button></form>{% endif %}
+        <form method="post" action="{% url 'listing_photo_delete' p.pk %}" onsubmit="return confirm('Remove this photo?')">{% csrf_token %}<button class="photo-x" aria-label="Remove photo">×</button></form>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+    {% if photos|length < max_photos %}
+    <form method="post" action="{% url 'listing_photo_add' listing.pk %}" enctype="multipart/form-data" id="addPhotos">{% csrf_token %}
+      <div class="photo-actions">
+        <label class="btn btn-primary" for="apCamera">📷 Take photo</label>
+        <label class="btn btn-dark" for="apGallery">🖼️ From gallery</label>
+      </div>
+      <input type="file" name="photos" id="apCamera" accept="image/*" capture="environment" hidden onchange="this.form.requestSubmit ? this.form.requestSubmit() : this.form.submit()">
+      <input type="file" name="photos" id="apGallery" accept="image/*" multiple hidden onchange="this.form.requestSubmit ? this.form.requestSubmit() : this.form.submit()">
+      <div class="small text-muted mt-2" id="apStatus"></div>
+    </form>
+    {% endif %}
+  </div></div>
+
+  <form method="post" action="{% url 'listing_delete' listing.pk %}" class="mt-4 text-center" onsubmit="return confirm('Delete this listing and its photos? This cannot be undone.')">{% csrf_token %}
+    <button class="btn btn-link text-danger small">Delete listing</button>
+  </form>
+  {% endif %}
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+/* Shrink photos on the phone before uploading, like the add-listing screen. */
+(function () {
+  const form = document.getElementById("addPhotos");
+  if (!form) return;
+  async function shrink(file) {
+    try {
+      const img = new Image();
+      img.src = URL.createObjectURL(file);
+      await img.decode();
+      const s = Math.min(1, 1600 / Math.max(img.naturalWidth, img.naturalHeight));
+      const c = document.createElement("canvas");
+      c.width = Math.round(img.naturalWidth * s); c.height = Math.round(img.naturalHeight * s);
+      c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
+      return await new Promise(r => c.toBlob(b => r(b || file), "image/jpeg", 0.85));
+    } catch (e) { return file; }
+  }
+  form.addEventListener("submit", async e => {
+    e.preventDefault();
+    const files = [...form.querySelectorAll("input[type=file]")].flatMap(i => [...i.files]);
+    if (!files.length) return;
+    const status = document.getElementById("apStatus");
+    status.textContent = `Preparing ${files.length} photo(s)…`;
+    const data = new FormData();
+    data.append("csrfmiddlewaretoken", form.querySelector("[name=csrfmiddlewaretoken]").value);
+    for (const [i, f] of files.entries()) data.append("photos", await shrink(f), `photo-${i + 1}.jpg`);
+    status.textContent = "Uploading…";
+    try {
+      const res = await fetch(form.action, { method: "POST", body: data, headers: { "X-Requested-With": "fetch" } });
+      if (!res.ok) throw new Error(res.status);
+      location.reload();
+    } catch (err) {
+      status.textContent = "Upload failed. Check your connection and try again.";
+    }
+  });
+})();
+</script>
+{% endblock %}
