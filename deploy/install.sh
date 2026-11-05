@@ -82,12 +82,14 @@ done
 docker compose exec -T web python manage.py seed_cities
 
 ADMIN_PASSWORD=""
-if [ "$(docker compose exec -T web python manage.py shell -c 'from accounts.models import User; print(User.objects.filter(is_superuser=True).exists())' | tr -d '\r')" != "True" ]; then
+has_owner=$(docker compose exec -T web python manage.py shell -v 0 -c \
+  'from accounts.models import User; print("HAS_OWNER" if User.objects.filter(is_superuser=True).exists() else "NO_OWNER")' || true)
+if ! grep -q HAS_OWNER <<<"$has_owner"; then
   say "Creating the owner login"
   ADMIN_PASSWORD=$(openssl rand -base64 18 | tr -d '/+=' | cut -c1-16)
   docker compose exec -T -e DJANGO_SUPERUSER_USERNAME=admin -e DJANGO_SUPERUSER_PASSWORD="$ADMIN_PASSWORD" -e DJANGO_SUPERUSER_EMAIL="" \
     web python manage.py createsuperuser --noinput
-  docker compose exec -T web python manage.py shell -c \
+  docker compose exec -T web python manage.py shell -v 0 -c \
     "from accounts.models import User; User.objects.filter(username='admin').update(role='admin', first_name='Owner')"
 fi
 
@@ -147,5 +149,8 @@ echo "Address:   https://$DOMAIN"
 if [ -n "$ADMIN_PASSWORD" ]; then
   echo "Username:  admin"
   echo "Password:  $ADMIN_PASSWORD   (write it down, then change it after logging in)"
+else
+  echo "Owner login already existed. To set a new password for it, run:"
+  echo "  cd $DIR && docker compose exec web python manage.py changepassword admin"
 fi
 echo "Code and settings: $DIR   (update later with: cd $DIR && git pull && docker compose up -d --build)"
